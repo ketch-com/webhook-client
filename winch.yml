@@ -1,0 +1,11 @@
+name: webhook-client
+description: Webhook Client library
+repository: https://github.com/ketch-com/webhook-client
+release:
+  branches:
+    only: main
+environment:
+  GO111MODULE: on
+  CGO_ENABLED: "0"
+  GOOS: linux
+  GOPRIVATE: "go.ketch.com"
