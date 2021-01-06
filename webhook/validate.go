@@ -66,7 +66,7 @@ func (s *Client) Validate(ctx context.Context) error {
 
 	// Check that the Origin has been validated
 	allowedOrigin := resp.Header.Get("WebHook-Allowed-Origin")
-	if allowedOrigin != Origin && allowedOrigin != "*" {
+	if allowedOrigin != Origin && allowedOrigin != "*" && allowedOrigin != GangplankOrigin {
 		return newPermanentWebhookError("blocked because WebHook-Allowed-Origin header did not include our origin")
 	}
 

@@ -17,6 +17,7 @@ const (
 	SecretKey        = "secret"
 	AuthorizationKey = "authorization"
 	Origin           = "hoist.ketch.com"
+	GangplankOrigin  = "gangplank.ketch.com"
 )
 
 type Mode int
@@ -38,7 +39,7 @@ type Client struct {
 
 // NewClient returns a new Webhook Client
 func NewClient(ctx context.Context, mode Mode, url string, maxQPS uint64, tls *orlop.TLSConfig, auth *orlop.KeyConfig,
-	secret *orlop.KeyConfig, vault orlop.HasVaultConfig) (*Client, error) {
+	secret *orlop.KeyConfig, vault orlop.HasVaultConfig, origin string) (*Client, error) {
 
 	s := &Client{
 		mode:    mode,
@@ -50,8 +51,8 @@ func NewClient(ctx context.Context, mode Mode, url string, maxQPS uint64, tls *o
 	}
 
 	s.Headers.Set("User-Agent", fmt.Sprintf("%s/%s", version.Name, version.Version))
-	s.Headers.Add("Origin", Origin)
-	s.Headers.Add("WebHook-Request-Origin", Origin)
+	s.Headers.Add("Origin", origin)
+	s.Headers.Add("WebHook-Request-Origin", origin)
 	s.Headers.Add("WebHook-Request-Rate", fmt.Sprintf("%d", maxQPS))
 	s.Headers.Add("Cache-Control", "no-store")
 
