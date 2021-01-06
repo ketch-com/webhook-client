@@ -3,6 +3,7 @@ package webhook
 import (
 	"context"
 	"crypto/hmac"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -21,6 +22,7 @@ const (
 )
 
 type Mode int
+
 const (
 	Binary Mode = iota
 	Structured
@@ -77,6 +79,13 @@ func NewClient(ctx context.Context, mode Mode, url string, maxQPS uint64, tls *o
 	}
 
 	if s.secret, err = orlop.LoadKeyContext(ctx, secret, vault, SecretKey); err != nil {
+		return nil, err
+	}
+
+	// Webhook secret stored in vault is a base64 string representation of the []byte secret,
+	// need to decode back to original []byte here
+	s.secret, err = base64.StdEncoding.DecodeString(string(s.secret))
+	if err != nil {
 		return nil, err
 	}
 
